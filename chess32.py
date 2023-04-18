@@ -77,6 +77,21 @@ class ChessBoard():
                     if self.state[x][loc[1]] == f'{player}q':
                         valid_pieces.append((x,loc[1]))
                     break
+            for x in range(loc[0]+1, 8):
+                if self.state[x][loc[1]] != '':
+                    if self.state[x][loc[1]] == f'{player}q':
+                        valid_pieces.append((x,loc[1]))
+                    break
+            for y in range(loc[1]-1, -1, -1):
+                if self.state[loc[0]][y] != '':
+                    if self.state[loc[0]][y] == f'{player}q':
+                        valid_pieces.append((loc[0],y))
+                    break
+            for y in range(loc[1]+1, 8):
+                if self.state[loc[0]][y] != '':
+                    if self.state[loc[0]][y] == f'{player}q':
+                        valid_pieces.append((loc[0],y))
+                    break
 
 def main():
     board = ChessBoard()
