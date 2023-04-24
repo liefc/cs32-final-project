@@ -106,7 +106,7 @@ class ChessBoard():
         check_loc = loc
         while True:
             check_loc = (check_loc[0] + 1, check_loc[1] - 1)
-            if check_loc[0] == 8 or check_loc[1] == 8:
+            if check_loc[0] == 8 or check_loc[1] == -1:
                 break
             check_piece = self.state[check_loc[0]][check_loc[1]]
             if check_piece != '':
@@ -116,7 +116,7 @@ class ChessBoard():
         check_loc = loc
         while True:
             check_loc = (check_loc[0] - 1, check_loc[1] + 1)
-            if check_loc[0] == 8 or check_loc[1] == 8:
+            if check_loc[0] == -1 or check_loc[1] == 8:
                 break
             check_piece = self.state[check_loc[0]][check_loc[1]]
             if check_piece != '':
@@ -126,7 +126,7 @@ class ChessBoard():
         check_loc = loc
         while True:
             check_loc = (check_loc[0] - 1, check_loc[1] - 1)
-            if check_loc[0] == 8 or check_loc[1] == 8:
+            if check_loc[0] == -1 or check_loc[1] == -1:
                 break
             check_piece = self.state[check_loc[0]][check_loc[1]]
             if check_piece != '':
@@ -135,7 +135,39 @@ class ChessBoard():
                 break
 
         #Pawns:
+        if player == 'w':
+            pawns = [(loc[0] -1, loc[1] -1), (loc[0] + 1, loc[1] - 1)]
+        else:
+            pawns = [(loc[0] -1, loc[1] +1), (loc[0] + 1, loc[1] + 1)]
+
+        for square in range(len(pawns), -1, -1):
+            if (pawns[square][0] in [-1,8]) or (pawns[square][1] in [-1,8]):
+                pawns.pop(square)
+
+        for square in pawns:
+            check_piece = self.state[square[0]][square[1]]
+            if check_piece[0] != player and check_piece[1] == 'p':
+                return True
+            
         #Knights:
+        knights = [(loc[0] +2, loc[1] +1),
+                   (loc[0] +2, loc[1] -1),
+                   (loc[0] -2, loc[1] +1),
+                   (loc[0] -2, loc[1] -1),
+                   (loc[0] +1, loc[1] +2),
+                   (loc[0] -1, loc[1] +2),
+                   (loc[0] +1, loc[1] -2),
+                   (loc[0] -1, loc[1] -2)
+                   ]
+        
+        for square in range(len(knights), -1, -1):
+            if (knights[square][0] in [-1,8]) or (knights[square][1] in [-1,8]):
+                knights.pop(square)
+
+        for square in knights:
+            check_piece = self.state[square[0]][square[1]]
+            if check_piece[0] != player and check_piece[1] == 'n':
+                return True
 
     def move(self, player, piece, loc):
         # First do checks to see if move is valid
@@ -178,7 +210,6 @@ class Piece():
         self.check_moves()
         
     def check_moves(self, in_check):
-        
         if self.piece == 'q':
             for x in range(self.loc[0]-1, -1. -1):
                 if self.board.state[x][loc[1]] != '':
